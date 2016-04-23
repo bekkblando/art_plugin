@@ -11,242 +11,6 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.2.15/css/lightgallery.min.css">
 
-<script src="/wp-content/plugins/artdirectory/js/lightbox/js/lightgallery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.2.15/js/lightgallery.min.js"></script>
-<script src="/wp-content/plugins/artdirectory/js/lightbox/js/lg-fullscreen.js"></script>
-
-<style>
-/* TODO Move this into a style sheet */
-
-
-@font-face {
-  font-family: 'OpenSans-SemiboldItalic';
-  src: url('/wp-content/plugins/artdirectory/js/Fonts/OpenSans-SemiboldItalic.ttf') format('truetype');
-     }
-
-@font-face {
- font-family: 'OpenSans-SemiboldItalic';
- src: url('/wp-content/plugins/artdirectory/js/Fonts/OpenSans-SemiboldItalic.ttf') format('truetype');
-    }
-
-
-@font-face {
-  font-family: 'OpenSans-Semibold';
-  src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-Semibold.ttf') format('truetype');
-     }
-
- @font-face {
-  font-family: 'OpenSans-Regular';
-  src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-Regular.ttf') format('truetype');
-     }
-
-
- @font-face {
-   font-family: 'OpenSans-LightItalic';
-   src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-LightItalic.ttf') format('truetype');
-      }
-
-
- @font-face {
-   font-family: 'OpenSans-Light';
-   src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-Light.ttf') format('truetype');
-      }
-
-
- @font-face {
-   font-family: 'OpenSans-Italic';
-   src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-Italic.ttf') format('truetype');
-      }
-
-@font-face {
-  font-family: 'OpenSans-ExtraBoldItalic';
-  src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-ExtraBoldItalic.ttf') format('truetype');
-     }
-
- @font-face {
-   font-family: 'OpenSans-ExtraBold';
-   src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-ExtraBold.ttf') format('truetype');
-      }
-
-@font-face {
-  font-family: 'OpenSans-BoldItalic';
-  src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-BoldItalic.ttf') format('truetype');
-     }
-
- @font-face {
-   font-family: 'OpenSans-Bold';
-   src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-Bold.ttf') format('truetype');
-      }
-
-html,body{
-  width: 100%;
-  overflow-x: hidden;
-  font-family: OpenSans-Regular;
-}
-.main_field > li, .nav-pills > li > .main_field{
-  border: solid 1px white;
-  font-weight: 300;
-  border-radius: 0;
-  padding-top: 2px;
-  padding-bottom: 2px;
-}
-.main_field > a{
-  color: white;
-  background: none;
-}
-.nav-pills > li > .main_field:hover, .nav-pills > li > .sub_field:hover{
-  background: light-grey;
-}
-
-li.main_field{
-  margin-left: 1%;
-  margin-right: 1%;
-}
-
-.main_fields{
-  padding-bottom: 2%;
-}
-
-.sub_field, .nav-pills > li > .sub_field{
-  color: white;
-  border-radius: 0;
-  background: none;
-  font-weight: 300;
-}
-
-.directory_nav{
-  background-image: url('/wp-content/plugins/artdirectory/assets/abbott.jpg');;
-  padding-bottom: 2%;
-}
-
-.directory_header{
-  text-align: center;
-  margin-bottom: 15px;
-  margin-top: 15px;
-  color: white;
-  font-weight: 300;
-  font-size: 3.6em;
-}
-
-.directory_container{
-  text-align: center;
-}
-
-/* Center the nav pills */
-.center-pills {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
- }
-.artists_query{
-  margin-top: 10%;
-}
- .artist_post{
-   text-align: center;
- }
-
- .search_container{
-   float:right;
- }
- #search_submit{
-   padding-top: 2px;
-   padding-bottom: 2px;
- }
-
- .artist_modal_large{
-   width: 70%;
- }
-
- .forward-page, .back-page{
-   padding-top: 70%;
- }
-
- @keyframes slidy {
-0% { left: 0%; }
-20% { left: 0%; }
-25% { left: -100%; }
-45% { left: -100%; }
-50% { left: -200%; }
-70% { left: -200%; }
-75% { left: -300%; }
-95% { left: -300%; }
-100% { left: -400%; }
-}
-
-body { margin: 0; }
-div.artist-gallery { overflow: hidden; }
-div.artist-gallery figure img { width: 20%; float: left; }
-div.artist-gallery figure {
-  position: relative;
-  width: 500%;
-  margin: 0;
-  left: 0;
-  text-align: left;
-  font-size: 0;
-  transition: : slidy;
-}
-
-.gallery-item.active-gal{
-  display: inline-block;
-}
-
-.gallery-item{
-  display: none;
-}
-
-.search-bars{
-  margin-top: 5%;
-}
-
-.gallery{
-  margin-bottom: 0px;
-  border: solid 20px;
-  border-color: #f5f4f6;
-}
-
-.modal-dialog{
-  width: 90%;
-  margin: auto;
-}
-
-.carousel-control.right{
-  background: none;
-  margin-right: 9%;
-}
-.carousel-control.left{
-  background: none;
-  margin-left: 9%;
-}
-
-.modal-header{
-  padding: 20px;
-  padding-bottom: 7px;
-  padding-bottom: 7px;
-}
-
-.artist-contact{
-  margin-top: 10%;
-  margin-bottom: 10%;
-}
-
-.social-icons{
-  margin-top: 3%;
-}
-
-.social-icons img{
-  width: 20%;
-  float: right;
-  margin-right: 3%;
-}
-
-#loading_gif{
-  text-align: center;
-  top: 0px;
-  position: absolute;
-
-}
-</style>
-
 <body>
 <div class="row directory_nav">
   <div class="container directory_container">
@@ -393,7 +157,7 @@ function sub_fields(main_field){
     $('.sub_fields').text(' ');
     jQuery.each(categories[main_field], function (name, value) {
 
-      onclick_function = "onclick='test(&quot;" + main_field + "&quot;" + ',' + "&quot;" + value + "&quot;)'"
+      onclick_function = "onclick='main_query(&quot;" + main_field + "&quot;" + ',' + "&quot;" + value + "&quot;)'"
       var field = "<li class='sub_field' role='presentation' "+ onclick_function + ">" + "<a class='sub_field'>" + value + "</a>" + "</li>";
 
       $('.sub_fields').append(field);
@@ -409,34 +173,15 @@ $('#search').keyup(function(search_form){
   search($('#search').val());
 });
 
-var data = {'main_term' : null,
-        'second_term' : null, "offset" : 0, "search_term" : 0, "modal_open": null, "mobile": false};
-
-
 
 main_fields();
-test();
+main_query();
 get_pagination_offset();
 
 
 
 </script>
 
-<style type="text/css">
-
-.map_contains {
-	width: 100%;
-	height: 400px;
-	border: #ccc solid 1px;
-	margin: 20px 0;
-}
-
-/* fixes potential theme css conflict */
-.map_contains img {
-   max-width: inherit !important;
-}
-
-</style>
 <?php
 $GOOGLE_MAPS_KEY = "AIzaSyBqjvIk3rlM3YzM2vf7gDBYmfwXJaQMvw8"
 ?>
@@ -510,7 +255,6 @@ function new_map( $el, center ) {
 */
 
 function add_marker( $marker, map ) {
-  console.log($marker)
 	// var
 	var latlng = new google.maps.LatLng( $marker.attr('data-lat'), $marker.attr('data-lng') );
 

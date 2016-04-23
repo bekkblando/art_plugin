@@ -1,12 +1,14 @@
-// TODO Change test to a more descriptive name
-var test = function test(main_term_cat, second_term_cat, offset){
+// TODO Clean up Code
+
+var data = {'main_term' : null,
+        'second_term' : null, "offset" : 0, "search_term" : 0, "modal_open": null, "mobile": false};
+
+var main_query = function main_query(main_term_cat, second_term_cat, offset){
 jQuery(document).ready(function($){
 	if(!data['mobile']){
-		console.log(data['mobile'])
-		loading_gif = "<img src='/wp-content/plugins/artdirectory/js/loading_spinner.gif' />"
-		$('.artists').html(loading_gif);
+		loading()
 	}
-	test = $.ajax({
+	main_query = $.ajax({
 		url: more_posts.ajaxurl,
 		type: "post",
 		data: {
@@ -29,9 +31,8 @@ jQuery(document).ready(function($){
 
 search = function search(search_title, offset){
 jQuery(document).ready(function($){
-	loading_gif = "<img id='loading_gif' src='/wp-content/plugins/artdirectory/js/loading_spinner.gif' />"
-	$('.artists').html(loading_gif);
-	test = $.ajax({
+	loading();
+	search_query = $.ajax({
 		url: more_posts.ajaxurl,
 		type: "post",
 		data: {
@@ -52,9 +53,8 @@ jQuery(document).ready(function($){
 
 alphabet = function alphabet(alphabet){
 jQuery(document).ready(function($){
-	loading_gif = "<img src='/wp-content/plugins/artdirectory/js/loading_spinner.gif' />"
-	$('.artists').html(loading_gif);
-	test = $.ajax({
+	loading();
+	alphabet_query = $.ajax({
 		url: more_posts.ajaxurl,
 		type: "post",
 		data: {
@@ -108,7 +108,6 @@ function get_pagination_offset(){
 /* These are helper functions */
 
 function modal_build(artist){
-		console.log("Hell")
 		data["modal_open"] = artist;
 		artist_data = data[artist]
 		$('.artist-name').html(artist)
@@ -145,8 +144,7 @@ function modal_build(artist){
 			marker += "<div class='marker' data-lat='"  + map_field.lat + "' data-lng='" + map_field.lng + "'>"
 			marker += "</div>"
 			$('.map_contains').html(marker)
-			console.log(marker)
-			setTimeout(function() { map_create(); }, 5000);
+			setTimeout(function() { map_create(); }, 3000);
 		}else{
 			$('.map_contains').hide()
 			$('.artist-address').html(artist_data['address'])
@@ -154,7 +152,7 @@ function modal_build(artist){
 }
 
 
-
+// This handles the slide show aspect of the modal
 function slide_show(){
 	$('.art-gal-itself .gallery-item').first().toggleClass("active-gal")
 	$('.left').click(function(){
@@ -235,9 +233,13 @@ function clean_up_pagination_ui(data_length){
 	}else if (offset >= 8 && !data['mobile']) {
 		$('.back-page').show()
 	}
-	if(data_length < 8 && data['mobile']){
+	if(data_length < 8){
 		$('.forward-page').hide()
-	}else{
+	} else if(data['mobile']){
+		console.log("THis should appear")
+		$('.forward-page').hide()
+	}
+	else{
 		$('.forward-page').show()
 	}
 }
@@ -249,9 +251,9 @@ function pagination_query(offset){
 	query_search = data["search_term"];
 	if(query_search === "CATEGORIES"){
 		if(query_categories_main && query_categories_second){
-			return test(query_categories_main, query_categories_second, offset)
+			return main_query(query_categories_main, query_categories_second, offset)
 		}else{
-			return test(null, null, offset)
+			return main_query(null, null, offset)
 		}
 	}else{
 		if(query_search){
@@ -270,28 +272,35 @@ function check_if_response(response){
 	}
 }
 
+function loading(){
+	loading_gif = "<img src='/wp-content/plugins/artdirectory/js/loading_spinner.gif' class='loader' />"
+	$('.artists').html(loading_gif);
+}
+
 jQuery("#slider").slider({
-  min: 65,
+  min: 55,
   max: 90,
   slide: function( event, ui ) {
-    jQuery('#display').text(String.fromCharCode(ui.value));
-		alphabet(String.fromCharCode(ui.value))
+		console.log(ui.value)
+		if(ui.value > 64){
+	    jQuery('#display').text(String.fromCharCode(ui.value));
+			alphabet(String.fromCharCode(ui.value))
+		} else {
+			digits = [55, 56, 57, 58, 59, 60, 61, 62, 63, 64]
+			jQuery('#display').text(digits.indexOf(ui.value).toString())
+			alphabet(digits.indexOf(ui.value).toString())
+		}
   }
 });
 
-function MobileCleanUp(){
-	$('.back-page').css("display", "none")
-	$('.forward-page').css("display", "none")
-}
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEmobile|Opera Mini/i.test(navigator.userAgent) ) {
-	MobileCleanUp();
+	data['mobile'] = true
 	$(window).scroll(function () {
      if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+			  console.log("Is this appearing?")
 			 	data["offset"] += 8
 			 	offset = data["offset"];
-				data['mobile'] = true
-				console.log("Testing")
         pagination_query(offset)
      }
   });

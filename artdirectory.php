@@ -3,7 +3,7 @@
 * Plugin Name: Art Directory
 * Plugin URI: None
 * Description: A plugin built for custom art filtering
-* Version: .1
+* Version: .9
 * Author: Bekk Blando
 * Author URI: www.bekkblando.com
 **/
@@ -272,6 +272,7 @@ wp_enqueue_script('jquery-ui-slider');
 wp_enqueue_script('more-posts', plugins_url( '/js/more_posts.js' , __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-slider'), 2.0, true);
 wp_enqueue_script('bootstrap', plugins_url( '/js/bootstrap.min.js' , __FILE__ ), array('jquery'));
 wp_enqueue_style('bootstrap_css', plugins_url( '/js/bootstrap.min.css' , __FILE__ ));
+wp_enqueue_style('custom_css', plugins_url( '/css/art_style.css' , __FILE__ ));
 
 wp_localize_script('more-posts', 'more_posts', array('ajaxurl' => admin_url('admin-ajax.php'))); //create ajaxurl global for front-end AJAX call;
 wp_register_script('lightbox',plugins_url( '/js/dist/js/lightgallery-all.min.js' , __FILE__ ));
@@ -320,7 +321,7 @@ function build_gallery($field_data){
     $img_ids[] = $img['id'];
   }
   $ids = join(",", $img_ids);
-  return do_shortcode('[gallery ids="'.$ids.'"]');
+  return do_shortcode('[gallery ids="'.$ids.'" size="full"]');
 }else{
   return "No Gallery Available";
 }
