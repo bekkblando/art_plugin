@@ -122,20 +122,28 @@ function modal_build(artist){
 			$('.art-gal-itself').html("No Gallery Available");
 		}
 
+    // TODO put this social media code in a helper function
+    social_media = ""
 		if(artist_data['facebook']){
-				facebook_img = "<a href='" + artist_data['facebook'] + "'>"
+				facebook_img = "<a href='http://" + artist_data['facebook'] + "'>"
 			  facebook_img += "<img class='icon-next' src='/wp-content/plugins/artdirectory/assets/Facebook_purple_circle.png'/>"
 				facebook_img += "</a>"
-				$('.social-icons').append(facebook_img)
+        social_media += facebook_img
 		}
 
 		if(artist_data['instagram']){
-				instagram_img = "<a href='" + artist_data['instagram'] + "'>"
+				instagram_img = "<a href='http://" + artist_data['instagram'] + "'>"
 			  instagram_img += "<img class='icon-next' src='/wp-content/plugins/artdirectory/assets/Instagram_purple_circle.png'/>"
 				instagram_img += "</a>"
-				$('.social-icons').append(instagram_img)
+        social_media += instagram_img
 		}
-
+    if(artist_data['twitter']){
+        twitter_img = "<a href='http://" + artist_data['twitter'] + "'>"
+        twitter_img += "<img class='icon-next' src='/wp-content/plugins/artdirectory/assets/twitter_purple_circle.png'/>"
+        twitter_img += "</a>"
+        social_media += twitter_img
+    }
+    $('.social-icons').html(social_media)
 		if(artist_data['map_field']){
 			$('.map_contains').replaceWith("<div class='map_contains'></div>")
 			map_field = artist_data['map_field']
@@ -173,8 +181,6 @@ function slide_show(){
 	});
 	gal_ui_clean()
 }
-
-// To be moved to helper TODO
 
 function gal_ui_clean(){
 	index = $( ".art-gal-itself .gallery-item" ).index( $('.active-gal') );
@@ -281,13 +287,13 @@ jQuery("#slider").slider({
   min: 55,
   max: 90,
   slide: function( event, ui ) {
-		console.log(ui.value)
 		if(ui.value > 64){
 	    jQuery('#display').text(String.fromCharCode(ui.value));
 			alphabet(String.fromCharCode(ui.value))
 		} else {
 			digits = [55, 56, 57, 58, 59, 60, 61, 62, 63, 64]
 			jQuery('#display').text(digits.indexOf(ui.value).toString())
+
 			alphabet(digits.indexOf(ui.value).toString())
 		}
   }
