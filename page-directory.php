@@ -40,8 +40,8 @@
     </div>
     <div class="col-md-6">
       <div class="search_container">
-        <input id="search_submit" type="submit" value="search"/>
         <input id="search" placeholder="Artist's Name"/>
+        <i class="fa fa-search search-icon"></i>
       </div>
     </div>
   </div>
@@ -119,7 +119,7 @@
 
           </div>
         </div>
-        
+
         <div class="row">
           <div class="container">
           <div class='col-md-12'>

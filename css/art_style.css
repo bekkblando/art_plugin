@@ -2,12 +2,12 @@
 
 @font-face {
   font-family: 'OpenSans-SemiboldItalic';
-  src: url('/wp-content/plugins/artdirectory/js/Fonts/OpenSans-SemiboldItalic.ttf') format('truetype');
+  src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-SemiboldItalic.ttf') format('truetype');
      }
 
 @font-face {
  font-family: 'OpenSans-SemiboldItalic';
- src: url('/wp-content/plugins/artdirectory/js/Fonts/OpenSans-SemiboldItalic.ttf') format('truetype');
+ src: url('/wp-content/plugins/artdirectory/assets/Fonts/OpenSans-SemiboldItalic.ttf') format('truetype');
     }
 
 
@@ -80,7 +80,7 @@ html,body{
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  font-family: OpenSans-Regular;
+  font-family: OpenSans-Regular !important;
 }
 .main_field > li, .nav-pills > li > .main_field{
   border: solid 1px white;
@@ -151,10 +151,22 @@ li.main_field{
 
  .search_container{
    float:right;
+   background: #F9F9F9;
+   border: .5px solid;
+   border-color: #333333;
+   border-radius: 1px;
+   padding-left: 5px;
+   padding-right: 5px;
+
  }
- #search_submit{
-   padding-top: 2px;
-   padding-bottom: 2px;
+ #search, #search:focus{
+   background: none;
+   border: none;
+   outline: none
+ }
+
+ .search-icon{
+   color: #725871;
  }
 
  .artist_modal_large{
@@ -278,12 +290,20 @@ div.artist-gallery figure {
 
 .ui-slider-horizontal{
   height: .4em !important;
+  border-color: #867085;
+
+}
+.ui-widget-content{
+  border: 2px solid #867085 !important;
 }
 .ui-slider-handle{
-  top: -.4em !important;
+  top: -.5em !important;
   border-radius: 100% !important;
+  border: 2px solid !important;
+  border-color: #867085 !important;
 }
 
 #display{
-  text-align: center;
+  text-align: left;
+  margin-bottom: 7px;
 }
