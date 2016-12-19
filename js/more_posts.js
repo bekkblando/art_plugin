@@ -4,11 +4,39 @@ var data = {'main_term' : null,
         'second_term' : null, "offset" : 0, "search_term" : 0, "modal_open": null, "mobile": false};
 
 var main_query = function main_query(main_term_cat, second_term_cat, offset){
-jQuery(document).ready(function($){
+                        console.log(main_term_cat, second_term_cat);
+                        if(data["main_term"]){
+                          // Remove an adjusted class for the highlight functionality
+                          // console.log("Removed", "." + data["main_term"].split(" ").join("_").replace("&",""));
+                          // Build the class name to remove
+                          // main_class_remove = "." + data["main_term"].split(" ").join("_").replace("&","")
+                          jQuery('.main_field').removeClass("active_main")
+                        }
+                        if(data["second_term"]){
+                          // Remove prior adjusted class to highlight a new item
+                          // Build the class name to remove
+                          second_class_remove = "." + data["second_term"].split(" ").join("_").replace("&","")
+                          jQuery(second_class_remove).removeClass("active_sub")
+                        }
+                        data["main_term"] = main_term_cat
+			data["second_term"] = second_term_cat
+                        if(main_term_cat){
+                          // Add an adjusted class for the highlight functionality
+                          // Build the class name to add
+                          main_class_add = "." + main_term_cat.split(" ").join("_").replace("&","")
+                          jQuery(main_class_add).addClass("active_main")
+                        }
+                        if(second_term_cat){
+                          // Add an adjusted class for the highlight functionality
+                          // Build the class name to remove
+                          second_class_add = "." + second_term_cat.split(" ").join("_").replace("&","")
+                          jQuery(second_class_add).addClass("active_sub")
+                        }
 	if(!data['mobile']){
 		loading()
 	}
-	main_query = $.ajax({
+	data['search_term'] = "CATEGORIES"
+	main_query = jQuery.ajax({
 		url: more_posts.ajaxurl,
 		type: "post",
 		data: {
@@ -19,20 +47,18 @@ jQuery(document).ready(function($){
 		},
 		dataType: "html",
 		success: function(response){
-			data["main_term"] = main_term_cat
+                        data["main_term"] = main_term_cat
 			data["second_term"] = second_term_cat
 			data['search_term'] = "CATEGORIES"
 			display_artist(response, data['mobile'])
 			return check_if_response(response)
 		}
 	});
-});
 }
 
 search = function search(search_title, offset){
-jQuery(document).ready(function($){
 	loading();
-	search_query = $.ajax({
+	search_query = jQuery.ajax({
 		url: more_posts.ajaxurl,
 		type: "post",
 		data: {
@@ -47,14 +73,12 @@ jQuery(document).ready(function($){
 			display_artist(response, data['mobile'])
 			return check_if_response(response)
 		}
-	});
 });
 }
 
 alphabet = function alphabet(alphabet){
-jQuery(document).ready(function($){
 	loading();
-	alphabet_query = $.ajax({
+	alphabet_query = jQuery.ajax({
 		url: more_posts.ajaxurl,
 		type: "post",
 		data: {
@@ -69,7 +93,6 @@ jQuery(document).ready(function($){
 			display_artist(response)
 			return check_if_response(response)
 		}
-	});
 });
 }
 
@@ -82,7 +105,7 @@ function get_pagination_offset(){
 	offset = data["offset"]
 
 	// Handle Pagination Backwards
-	$('.back-page').click(function(){
+	jQuery('.back-page').click(function(){
 		offset = data["offset"]
 		if(offset != 0){
 			offset = offset - 8;
@@ -95,7 +118,7 @@ function get_pagination_offset(){
 	});
 
 	// Handle Pagination Forward
-	$('.forward-page').click(function(){
+	jQuery('.forward-page').click(function(){
 		offset = data['offset'];
 		offset = offset + 8;
 		pagination_query(offset)
@@ -110,16 +133,25 @@ function get_pagination_offset(){
 function modal_build(artist){
 		data["modal_open"] = artist;
 		artist_data = data[artist]
-		$('.artist-name').html(artist)
-		$('.artist-web').html(artist_data['website'])
-		$('.artist-email').html(artist_data['email_address'])
-		$('.artist-phone').html(artist_data['phone_number'])
-		$('.artist-statement').html(artist_data['artists_statement']);
+		jQuery('.artist-first_name').html(artist_data['first_name'])
+		jQuery('.artist-last_name').html(artist_data['last_name'])
+		jQuery('.artist-web').html("<a href='http://" + artist_data['website'] + "'>" + artist_data['website'] + "</a>")
+		jQuery('.artist-email').html("<a href='mailto:" + artist_data['email_address'] + "'>" + artist_data['email_address'] + "</a>")
+		jQuery('.artist-phone').html(artist_data['phone_number'])
+		jQuery('.artist-statement').html(artist_data['artists_statement']);
+                jQuery('.artist-additional-header').html(artist_data['additional_information_header']);
+                jQuery('.artist-additional').html(artist_data['additional_information']);
+		jQuery('.artist-building').html(artist_data['building'])
+		jQuery('.artist-street').html(artist_data['street'])
+		jQuery('.artist-city').html(artist_data['city'])
+		jQuery('.artist-state').html(artist_data['state'])
+		jQuery('.artist-zip').html(artist_data['zip'])
+		jQuery('.category-modal').html(artist_data['category'])
 		if(artist_data['thumb_nail_image']){
-					$('.art-gal-itself').html(build_gallery(artist));
+					jQuery('.art-gal-itself').html(build_gallery(artist));
 					slide_show()
 		} else{
-			$('.art-gal-itself').html("No Gallery Available");
+			jQuery('.art-gal-itself').html("No Gallery Available");
 		}
 
     // TODO put this social media code in a helper function
@@ -143,39 +175,39 @@ function modal_build(artist){
         twitter_img += "</a>"
         social_media += twitter_img
     }
-    $('.social-icons').html(social_media)
+    jQuery('.social-icons').html(social_media)
 		if(artist_data['map_field']){
-			$('.map_contains').replaceWith("<div class='map_contains'></div>")
+			jQuery('.map_contains').replaceWith("<div class='map_contains'></div>")
 			map_field = artist_data['map_field']
-			$('.map_contains').show()
+			jQuery('.map_contains').show()
 			marker = ""
 			marker += "<div class='marker' data-lat='"  + map_field.lat + "' data-lng='" + map_field.lng + "'>"
 			marker += "</div>"
-			$('.map_contains').html(marker)
+			jQuery('.map_contains').html(marker)
 			setTimeout(function() { map_create(); }, 3000);
 		}else{
-			$('.map_contains').hide()
-			$('.artist-address').html(artist_data['address'])
+			jQuery('.map_contains').hide()
+
 		}
 }
 
 
 // This handles the slide show aspect of the modal
 function slide_show(){
-	$('.art-gal-itself .gallery-item').first().toggleClass("active-gal")
-	$('.left').click(function(){
-		index = $( ".art-gal-itself .gallery-item" ).index( $('.active-gal') );
+	jQuery('.art-gal-itself .gallery-item').first().toggleClass("active-gal")
+	jQuery('.left').click(function(){
+		index = jQuery( ".art-gal-itself .gallery-item" ).index( jQuery('.active-gal') );
 		if(index > 0){
-			$('.active-gal').toggleClass("active-gal")
-			$($( ".art-gal-itself .gallery-item" )[index - 1]).toggleClass("active-gal")
+			jQuery('.active-gal').toggleClass("active-gal")
+			jQuery(jQuery( ".art-gal-itself .gallery-item" )[index - 1]).toggleClass("active-gal")
 		}
 		gal_ui_clean()
 	});
-	$('.right').click(function(){
-		index = $( ".art-gal-itself .gallery-item" ).index( $('.active-gal') );
-		if($( ".art-gal-itself .gallery-item" )[index+1]){
-			$('.active-gal').toggleClass("active-gal")
-			$($( ".art-gal-itself .gallery-item" )[index + 1]).toggleClass("active-gal")
+	jQuery('.right').click(function(){
+		index = jQuery( ".art-gal-itself .gallery-item" ).index( jQuery('.active-gal') );
+		if(jQuery( ".art-gal-itself .gallery-item" )[index+1]){
+			jQuery('.active-gal').toggleClass("active-gal")
+			jQuery(jQuery( ".art-gal-itself .gallery-item" )[index + 1]).toggleClass("active-gal")
 		}
 		gal_ui_clean()
 	});
@@ -183,16 +215,16 @@ function slide_show(){
 }
 
 function gal_ui_clean(){
-	index = $( ".art-gal-itself .gallery-item" ).index( $('.active-gal') );
+	index = jQuery( ".art-gal-itself .gallery-item" ).index( jQuery('.active-gal') );
 	if(index === 0){
-		$('.left').hide()
+		jQuery('.left').hide()
 	}else {
-		$('.left').show()
+		jQuery('.left').show()
 	}
-	if($($( ".art-gal-itself .gallery-item" )[index+1]).length){
-		$('.right').show()
+	if(jQuery(jQuery( ".art-gal-itself .gallery-item" )[index+1]).length){
+		jQuery('.right').show()
 	}else{
-		$('.right').hide()
+		jQuery('.right').hide()
 	}
 }
 
@@ -206,16 +238,16 @@ function build_gallery(artist){
 }
 
 function display_artist(response){
-	cleaned_response = $.parseJSON(response);
+	cleaned_response = jQuery.parseJSON(response);
 	// cleaned_response = response.replace(/[\]\[\"]+/g, '').split(",");
 	artist_posts = ""
 	cleaned_response.forEach(function(artist){
 		artist_posts += build_artist(artist)
 	});
 	if (data['mobile']){
-		$('.artists').append(artist_posts);
+		jQuery('.artists').append(artist_posts);
 	} else{
-		$('.artists').html(artist_posts);
+		jQuery('.artists').html(artist_posts);
 	}
 }
 
@@ -223,11 +255,14 @@ function build_artist(artist){
 	data[artist[0]] = artist[1]
 	data[artist[0]+"gallery"] = artist[2]
 	build_artist_str = ""
-	build_artist_str += "<div class='col-md-3 artist_post'>"
-	if(artist[1]['thumb_nail_image']){
-		build_artist_str += "<img src='" + artist[1]['thumb_nail_image']['url'] + "'/>"
+	build_artist_str += "<div class='col-md-3 artist_post'><a data-toggle='modal' data-target='#artist' onclick='modal_build("+ "&quot;" + artist[0] + "&quot;" + ")'>"
+	if(artist[1]['thumb_nail_image'] && artist[1]['thumb_nail_image']['sizes']['medium']){
+		build_artist_str += "<img src='" + artist[1]['thumb_nail_image']['sizes']['medium'] + "'/>"
 	}
-	build_artist_str +=  "<a data-toggle='modal' data-target='#artist' onclick='modal_build("+ "&quot;" + artist[0] + "&quot;" + ")'>" + artist[0] + "</a></div>"
+	if(!artist[1]['category']){
+		artist[1]['category'] = "No Category Available"
+	}
+	build_artist_str += "<div class='artist-thu-title'>" + artist[0] + "<div class= "+ "'" + "category-post" + " ' >" + artist[1]['category'] + "</div></div></a></div>";
 	build_artist_str += ""
 	return build_artist_str
 }
@@ -235,18 +270,17 @@ function build_artist(artist){
 function clean_up_pagination_ui(data_length){
 	offset = data["offset"];
 	if(offset === 0){
-		$('.back-page').hide()
+		jQuery('.back-page').hide()
 	}else if (offset >= 8 && !data['mobile']) {
-		$('.back-page').show()
+		jQuery('.back-page').show()
 	}
 	if(data_length < 8){
-		$('.forward-page').hide()
+		jQuery('.forward-page').hide()
 	} else if(data['mobile']){
-		console.log("THis should appear")
-		$('.forward-page').hide()
+		jQuery('.forward-page').hide()
 	}
 	else{
-		$('.forward-page').show()
+		jQuery('.forward-page').show()
 	}
 }
 
@@ -258,7 +292,9 @@ function pagination_query(offset){
 	if(query_search === "CATEGORIES"){
 		if(query_categories_main && query_categories_second){
 			return main_query(query_categories_main, query_categories_second, offset)
-		}else{
+		}else if(query_categories_main){
+                        return main_query(query_categories_main, null, offset)
+                }else{
 			return main_query(null, null, offset)
 		}
 	}else{
@@ -269,7 +305,7 @@ function pagination_query(offset){
 }
 
 function check_if_response(response){
-	data_length = $.parseJSON(response).length
+	data_length = jQuery.parseJSON(response).length
 	clean_up_pagination_ui(data_length)
 	if(data_length){
 		return true
@@ -280,7 +316,7 @@ function check_if_response(response){
 
 function loading(){
 	loading_gif = "<img src='/wp-content/plugins/artdirectory/js/loading_spinner.gif' class='loader' />"
-	$('.artists').html(loading_gif);
+	jQuery('.artists').html(loading_gif);
 }
 
 jQuery("#slider").slider({
@@ -289,22 +325,29 @@ jQuery("#slider").slider({
   slide: function( event, ui ) {
 		if(ui.value > 64){
 	    jQuery('#display').text(String.fromCharCode(ui.value));
-			alphabet(String.fromCharCode(ui.value))
 		} else {
 			digits = [55, 56, 57, 58, 59, 60, 61, 62, 63, 64]
 			jQuery('#display').text(digits.indexOf(ui.value).toString())
-
-			alphabet(digits.indexOf(ui.value).toString())
 		}
-  }
+  },
+    change: function (event, ui) {
+	if(ui.value > 64){
+    jQuery('#display').text(String.fromCharCode(ui.value));
+		alphabet(String.fromCharCode(ui.value))
+	} else {
+		digits = [55, 56, 57, 58, 59, 60, 61, 62, 63, 64]
+		jQuery('#display').text(digits.indexOf(ui.value).toString())
+
+		alphabet(digits.indexOf(ui.value).toString())
+	}
+    }
 });
 
 
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEmobile|Opera Mini/i.test(navigator.userAgent) ) {
 	data['mobile'] = true
-	$(window).scroll(function () {
-     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
-			  console.log("Is this appearing?")
+	jQuery(window).scroll(function () {
+     if (jQuery(window).scrollTop() >= jQuery(document).height() - jQuery(window).height() - 10) {
 			 	data["offset"] += 8
 			 	offset = data["offset"];
         pagination_query(offset)

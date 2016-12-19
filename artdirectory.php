@@ -10,6 +10,17 @@
 
 add_action( 'init', 'create_post_type' );
 add_action( 'init', 'create_taxomony_system' );
+// add_action('init', 'fix_taxomony_system');
+
+function fix_taxomony_system(){
+	$sc_id = get_term_by('name', 'Scuplture & Meta', 'Type')->ID;
+	$jg_id = get_term_by('name', 'Jewlery & Glass', 'Type')->ID;
+	wp_delete_term($sc_id, 'Type');
+	wp_delete_term($jg_id, 'Type');
+	trigger_error(print_r($sc_id));
+}
+
+
 function create_post_type() {
   register_post_type( 'artist',
     array(
@@ -33,7 +44,6 @@ function create_post_type() {
   );
 }
 
-
 function create_taxomony_system(){
   register_taxonomy(
     'Type',
@@ -52,6 +62,8 @@ function create_taxomony_system(){
     )
   );
 
+
+
   wp_insert_term(
 'Visual Arts', // the term
 'Type', // the taxonomy
@@ -59,6 +71,16 @@ array(
   'description'=> 'Visual Arts',
 )
 );
+
+
+  wp_insert_term(
+'Printmaking', // the term
+'Type', // the taxonomy
+array(
+  'description'=> 'Printmaking',
+)
+);
+
 
 wp_insert_term(
 'Performing Arts', // the term
@@ -134,10 +156,10 @@ array(
 );
 
 wp_insert_term(
-'Jewlery & Glass', // the term
+'Jewelry & Glass', // the term
 'Type', // the taxonomy
 array(
-'description'=> 'Jewlery & Glass',
+'description'=> 'Jewelry & Glass',
 )
 );
 
@@ -166,10 +188,10 @@ array(
 );
 
 wp_insert_term(
-'Scuplture & Metal', // the term
+'Sculpture & Metal', // the term
 'Type', // the taxonomy
 array(
-'description'=> 'Scuplture & Metal',
+'description'=> 'Sculpture & Metal',
 )
 );
 
@@ -270,7 +292,7 @@ wp_enqueue_script('jquery');
 wp_enqueue_script('jquery-ui-core');
 wp_enqueue_script('jquery-ui-slider');
 wp_enqueue_script('more-posts', plugins_url( '/js/more_posts.js' , __FILE__ ), array('jquery', 'jquery-ui-core', 'jquery-ui-slider'), 2.0, true);
-wp_enqueue_script('bootstrap', plugins_url( '/js/bootstrap.min.js' , __FILE__ ), array('jquery'));
+// wp_enqueue_script('bootstrap', plugins_url( '/js/bootstrap.min.js' , __FILE__ ), array('jquery'));
 wp_enqueue_style('bootstrap_css', plugins_url( '/js/bootstrap.min.css' , __FILE__ ));
 wp_enqueue_style('custom_css', plugins_url( '/css/art_style.css' , __FILE__ ));
 
@@ -278,7 +300,7 @@ wp_localize_script('more-posts', 'more_posts', array('ajaxurl' => admin_url('adm
 wp_register_script('lightbox',plugins_url( '/js/dist/js/lightgallery-all.min.js' , __FILE__ ));
 wp_enqueue_script('lightbox');
 }
-add_action( 'wp_enqueue_scripts', 'enqueue_custom_code');
+add_action( 'wp_enqueue_scripts', 'enqueue_custom_code', 15);
 add_action('wp_ajax_more_posts', 'more_posts'); //fire get_more_posts on AJAX call for logged-in users;
 add_action('wp_ajax_nopriv_more_posts', 'more_posts'); //fire get_more_posts on AJAX call for all other users;
 
@@ -318,21 +340,25 @@ function build_gallery($field_data){
   $img_ids = [];
   if ($field_data){
   foreach ($field_data as $img) {
+    // trigger_error(print_r($img))
     $img_ids[] = $img['id'];
   }
   $ids = join(",", $img_ids);
-  return do_shortcode('[gallery ids="'.$ids.'" size="full"]');
+  return do_shortcode('[gallery ids="'.$ids.'" size="medium"]');
 }else{
   return "No Gallery Available";
 }
 }
 
 function build_args($main_term, $second_term, $search_term, $offset){
+  // TODO This is else format is long and bad practice
+  // It should iterate through the various options or atleast repeat itself less in the hashmap
   if($main_term and $second_term){
   // Arguments to search for a combination of items
   $args = array(
     'post_type' => 'artist',
-    'orderby' => 'name',
+    'meta_key' => 'last_name',
+    'orderby' => 'last_name',
     'order' => 'ASC',
     'post_status' => 'publish',
     'posts_per_page' => 8,
@@ -345,11 +371,30 @@ function build_args($main_term, $second_term, $search_term, $offset){
      ),
    ),
   );
+}elseif($main_term){
+  $args = array(
+    'post_type' => 'artist',
+    'meta_key' => 'last_name',
+    'orderby' => 'last_name',
+    'order' => 'ASC',
+    'post_status' => 'publish',
+    'posts_per_page' => 8,
+    'tax_query' => array(
+     array(
+       'taxonomy' => 'Type',
+       'field'    => 'name',
+       'terms'    => array($main_term)
+     ),
+   ),
+  );
 }elseif($search_term){
   // Arguments for a search by title for artists
   $args = array(
     'post_type' => 'artist',
     'post_status' => 'publish',
+    'meta_key' => 'last_name',
+    'orderby' => 'last_name',
+    'order' => 'ASC',
     's' => $search_term,
     'order' => 'DSC',
     'orderby' => "title",
@@ -359,9 +404,10 @@ function build_args($main_term, $second_term, $search_term, $offset){
   $args = array(
     'post_type' => 'artist',
     'post_status' => 'publish',
-    'posts_per_page' => 8,
+    'orderby' => 'last_name',
+    'meta_key' => 'last_name',
     'order' => 'ASC',
-    'orderby' => "title",
+    'posts_per_page' => 8,
   );
 }
   // This handles pagination parameters, the pagination is handled on the front
@@ -430,7 +476,7 @@ class PageTemplater {
 				);
                 // Add your templates to this array.
                 $this->templates = array(
-                        'page-directory.php'     => 'Directory Page',
+                        // 'page-directory.php'     => 'Directory Page',
                 );
 
         }
@@ -490,9 +536,9 @@ add_action( 'plugins_loaded', array( 'PageTemplater', 'get_instance' ) );
 /*
 function sjc_delete_terms() {
      if ( is_admin() ) {
-          $terms = get_terms( 'genre', array( 'fields' => 'ids', 'hide_empty' => false ) );
+          $terms = get_terms( 'Type', array( 'fields' => 'ids', 'hide_empty' => false ) );
           foreach ( $terms as $value ) {
-               wp_delete_term( $value, 'genre' );
+               wp_delete_term( $value, 'Type' );
           }
      }
 }
